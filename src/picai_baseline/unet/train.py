@@ -36,21 +36,21 @@ def main():
     parser = argparse.ArgumentParser(description='Command Line Arguments for Training Script')
 
     # data I/0 + experimental setup
-    parser.add_argument('--max_threads', type=int, default=12,
+    parser.add_argument('--num_threads', type=int, default=6,
                         help="Max threads/workers for data loaders")
-    parser.add_argument('--validate_n_epochs', type=int, default=10,               
+    parser.add_argument('--validate_n_epochs', type=int, default=1,
                         help="Trigger validation every N epochs")
-    parser.add_argument('--validate_min_epoch', type=int, default=50,               
+    parser.add_argument('--validate_min_epoch', type=int, default=0,
                         help="Trigger validation after minimum N epochs")
     parser.add_argument('--export_best_model', type=int, default=1,                
                         help="Export model checkpoints")
     parser.add_argument('--resume_training', type=str, default=1,                
                         help="Resume training model, if checkpoint exists")
-    parser.add_argument('--weights_dir', type=str, required=True,            
+    parser.add_argument('--weights_dir', type=str, required=True, default='/results/weights/',
                         help="Path to export model checkpoints")
-    parser.add_argument('--overviews_dir', type=str, required=True,            
+    parser.add_argument('--overviews_dir', type=str, required=True, default='/mnt/DATA2/Sagi/Data/PICAI/results/UNet/overviews/Task2201_picai_baseline/',
                         help="Base path to training/validation data sheets")
-    parser.add_argument('--folds', type=int, nargs='+', required=True, 
+    parser.add_argument('--folds', type=int, nargs='+', required=True, default= [0,1,2,3,4],
                         help="Folds selected for training/validation run")
 
     # training hyperparameters
@@ -62,7 +62,7 @@ def main():
                         help="Number of classes at train-time")
     parser.add_argument('--num_epochs', type=int, default=100,              
                         help="Number of training epochs")
-    parser.add_argument('--base_lr', type=float, default=0.001,            
+    parser.add_argument('--base_lr', type=float, default=0.001,
                         help="Learning rate")
     parser.add_argument('--focal_loss_gamma', type=float, default=1.0,              
                         help="Focal Loss gamma value")
@@ -93,7 +93,8 @@ def main():
     for f in args.folds:
         # --------------------------------------------------------------------------------------------------------------------------
         # GPU/CPU specifications
-        device, args = compute_spec_for_run(args=args)
+        # device, args = compute_spec_for_run(args=args)
+        device = 'cuda'
 
         # derive dataLoaders
         train_gen, valid_gen, class_weights = prepare_datagens(args=args, fold_id=f)

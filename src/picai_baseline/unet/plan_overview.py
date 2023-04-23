@@ -16,6 +16,7 @@ import argparse
 import json
 from pathlib import Path
 from typing import Dict, List, Optional, Union
+import os
 
 import numpy as np
 import SimpleITK as sitk
@@ -100,11 +101,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Command Line Arguments')
     parser.add_argument("--task", type=str, default="Task2201_picai_baseline",
                         help="Task name of the experiment. Default: Task2201_picai_baseline")
-    parser.add_argument("--workdir", type=str, default="/workdir",
+    parser.add_argument("--workdir", type=str, default="/mnt/DATA2/Sagi/Data/PICAI/",
                         help="Path to the workdir where 'results' and 'nnUNet_raw_data' are stored. Default: /workdir")
-    parser.add_argument("--preprocessed_data_path", type=str, default="nnUNet_raw_data/{task}",
+    parser.add_argument("--preprocessed_data_path", type=str, default="/nnUNet_raw_data/{task}/",
                         help="Path to the preprocessed data, relative to the workdir. Default: /workdir/nnUNet_raw_data/{task}")
-    parser.add_argument("--overviews_path", type=str, default="results/UNet/overviews/{task}",
+    parser.add_argument("--overviews_path", type=str, default="/results/UNet/overviews/{task}",
                         help="Path to the overviews, relative to the workdir. Default: /workdir/results/UNet/overviews/{task}")
     parser.add_argument("--splits", type=str, default="picai_pub_nnunet",
                         help="Splits for cross-validation. Available: picai_pub, picai_pub_nnunet, picai_pubpriv, " +
@@ -112,9 +113,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # paths
-    workdir = Path(args.workdir)
-    preprocessed_data_path = workdir / args.preprocessed_data_path.replace("{task}", args.task)
-    overviews_path = workdir / args.overviews_path.replace("{task}", args.task)
+    # workdir = Path(args.workdir)
+    # preprocessed_data_path = workdir / args.preprocessed_data_path.replace("{task}", args.task)
+    # overviews_path = workdir / args.overviews_path.replace("{task}", args.task)
+    #
+    preprocessed_data_path = Path('/mnt/DATA2/Sagi/Data/PICAI/nnUNet_raw_data/Task2201_picai_baseline/')
+    overviews_path = Path('/mnt/DATA2/Sagi/Data/PICAI/results/UNet/overviews/Task2201_picai_baseline/')
+
 
     # evaluate
     main(

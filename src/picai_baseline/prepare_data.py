@@ -34,13 +34,13 @@ https://github.com/DIAGNijmegen/picai_baseline#prepare-data
 
 # set paths
 parser = argparse.ArgumentParser()
-parser.add_argument("--workdir", type=str, default=os.environ.get("workdir", "/workdir"),
+parser.add_argument("--workdir", type=str, default=os.environ.get("workdir", "/mnt/DATA2/Sagi/Data/PICAI/"),
                     help="Path to the working directory (default: /workdir, or the environment variable 'workdir')")
-parser.add_argument("--inputdir", type=str, default=os.environ.get("inputdir", "/input"),
+parser.add_argument("--inputdir", type=str, default=os.environ.get("inputdir", "/mnt/DATA2/Sagi/Data/PICAI/"),
                     help="Path to the input dataset (default: /input, or the environment variable 'inputdir')")
-parser.add_argument("--imagesdir", type=str, default="images",
+parser.add_argument("--imagesdir", type=str, default="data",
                     help="Path to the images, relative to --inputdir (default: /input/images)")
-parser.add_argument("--labelsdir", type=str, default="picai_labels",
+parser.add_argument("--labelsdir", type=str, default="annotations/picai_labels/",
                     help="Path to the labels, relative to --inputdir (root of picai_labels) (default: /input/picai_labels)")
 parser.add_argument("--spacing", type=float, nargs="+", required=False,
                     help="Spacing to preprocess images to. Default: keep as-is.")
@@ -124,6 +124,7 @@ else:
 
     # note: modify preprocessing settings here
     mha2nnunet_settings["preprocessing"].update(args.preprocessing_kwargs)
+    mha2nnunet_settings["preprocessing"]["spacing"] = [3.0, 0.5, 0.5]
 
     # save mha2nnunet_settings
     with open(mha2nnunet_settings_path, "w") as fp:
@@ -142,6 +143,7 @@ else:
         mha2nnunet_settings["options"] = {}
     mha2nnunet_settings["options"]["annotation_preprocess_func"] = preprocess_picai_annotation
 
+    # mha2nnunet_settings['archive'] = mha2nnunet_settings['archive'][:259]
     # prepare dataset in nnUNet format
     archive = MHA2nnUNetConverter(
         output_dir=nnUNet_raw_data_path,
